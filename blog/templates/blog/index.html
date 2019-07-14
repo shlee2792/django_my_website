@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog</title>
+</head>
+<body>
+
+<h1> BLOG </h1>
+
+{% for post in posts %}
+<h3> {{ post.title }}</h3>
+<h4> {{ post.created}} by {{ post.author }}</h4>
+<p>  {{ post.content }} </p>
+
+{% endfor %}
+</body>
+</html>
