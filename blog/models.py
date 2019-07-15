@@ -6,6 +6,8 @@ class Post(models.Model):
     content = models.TextField()
     created = models.DateTimeField()
     author = models.ForeignKey(User, on_delete=True)
+    head_image = models.ImageField(upload_to='blog/%y/%m/%d/', blank=True)
+
 
     def __str__(self):
         return '{} :: {}'.format(self.title, self.author)
