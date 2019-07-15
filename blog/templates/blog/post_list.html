@@ -86,10 +86,7 @@
 
         <!-- Blog Entries Column -->
         <div class="col-md-8">
-
             <h1 class="my-4"> Blog</h1>
-
-
             {% for post in object_list%}
             <!-- Blog Post -->
             <div class="card mb-4">
@@ -159,22 +156,9 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Side Widget -->
-            <div class="card my-4">
-                <h5 class="card-header">Side Widget</h5>
-                <div class="card-body">
-                    You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
-                </div>
-            </div>
-
         </div>
 
     </div>
-
-
-
-
 
     <script src="{% static 'blog/_assets/js/jquery.min.js' %}"></script>
     <script src="{% static 'blog/_assets/js/popper.min.js' %}" ></script>
