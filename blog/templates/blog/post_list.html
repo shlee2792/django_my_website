@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" id = "navbar">
     <div class="container">
         <a href="../" class="navbar-brand">Jake's Practice</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +87,8 @@
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <h1 class="my-4"> Blog</h1>
+
+            {% if object_list.exists %}
             {% for post in object_list%}
             <!-- Blog Post -->
             <div class="card mb-4">
@@ -108,6 +110,10 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <h3>아직 게시물이 없습니다.</h3>
+            {% endif %}
+
 
         </div>
 
