@@ -29,6 +29,14 @@ class PostDetail(DetailView):
 
         return context
 
+class PostListByCategory(PostList):
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        category = Category.objects.get(slug = slug,)
+        return Post.objects.filter(category=category).order_by('-created')
+
+
+
 
 
 
