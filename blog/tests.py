@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
-from .models import Post, Category
+from .models import Post, Category, Tag
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -14,6 +14,15 @@ def create_category(name='life', description=''):
     category.save()
 
     return category
+
+def create_tag(name='some_tag'):
+    tag, is_create = Tag.objects.get_or_create(
+        name = name,
+    )
+    tag.slug = tag.name.replace(' ','-').replace('/','')
+    tag.save()
+
+    return tag
 
 def create_post(title, content, author, category = None):
     blog_post = Post.objects.create(
@@ -36,9 +45,8 @@ class TestModel(TestCase):
             title='The first Post',
             content='Hello world',
             author=self.author_000,
-            category=category,
         )
-        self.assertEqual(category.post_set.count(), 1) # post에 걸려있는 category가
+        self.assertEqual(category.post_set.count(), 0) # post에 걸려있는 category가
 
     def test_post(self):
         category = create_category()
@@ -48,6 +56,32 @@ class TestModel(TestCase):
             author=self.author_000,
             category=category,
         )
+
+    def test_tag(self):
+        tag_000 = create_tag(name='bad_guy')
+        tag_001 = create_tag(name='america')
+
+        post_000 = create_post(
+            title='The first Post',
+            content='Hello world',
+            author=self.author_000,
+        )
+        post_000.tags.add(tag_000)
+        post_000.tags.add(tag_001)
+        post_000.save()
+
+        post_001 = create_post(
+            title = 'Stay Fool, Stay hungry',
+            content = 'Story about Steve Jobs',
+            author= self.author_000,
+        )
+        post_001.tags.add(tag_001)
+        post_001.save()
+
+        self.assertEqual(post_000.tags.count(), 2)
+        self.assertEqual(tag_001.post_set.count(), 2)
+        self.assertEqual(tag_001.post_set.first(), post_000)
+        self.assertEqual(tag_001.post_set.last(), post_001)
 
 class TextView(TestCase):
     def setUp(self):

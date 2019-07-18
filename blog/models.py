@@ -17,6 +17,13 @@ class Category(models.Model):
         verbose_name_plural = 'categories'   ## Categorys -> categories
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    slug = models.SlugField(unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
 
 
 class Post(models.Model):
@@ -26,6 +33,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=True)
     head_image = models.ImageField(upload_to='blog/%y/%m/%d/', blank=True)
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag)
 
 
     def __str__(self):
