@@ -86,7 +86,8 @@ class TestModel(TestCase):
 class TextView(TestCase):
     def setUp(self):
         self.client= Client()
-        self.author_000 = User.objects.create(username = 'smith', password = 'nopassword')
+        self.author_000 = User.objects.create_user(username = 'smith', password = 'nopassword')
+        self.author_obama = User.objects.create_user(username='obama', password='nopassword')
 
     def check_navbar(self, soup):
         navbar = soup.find('div', id="navbar")
@@ -195,6 +196,37 @@ class TextView(TestCase):
         self.assertIn('미분류', main_div.text)
 
         self.check_right_side(soup)
+
+        self.assertIn(category_politics.name, main_div.text)    #category가 main_div에 있다.
+        self.assertNotIn('EDIT', main_div.text)        #edit 버튼이 로그인 하지 않은 경우 보이지 않는다
+
+        # Login 한 경우에는 post.author와 login 한 사용자가 동일하면 edit 버튼이 있다
+        login_success = self.client.login(username = 'smith', password = 'nopassword')
+        self.assertTrue(login_success)
+
+        response = self.client.get(post_000_url)
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_div = soup.find('div', id = 'main-div')
+        self.assertEqual(post_000.author, self.author_000)
+        self.assertIn('EDIT', main_div.text)
+
+
+        # 그렇지 않으면 없다
+        login_success = self.client.login(username='obama', password='nopassword')
+        self.assertTrue(login_success)
+
+        response = self.client.get(post_000_url)
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_div = soup.find('div', id='main-div')
+        self.assertEqual(post_000.author, self.author_000)
+        self.assertNotIn('EDIT', main_div.text)
+
+
+
 
     def test_post_list_by_category(self):
         category_politics = create_category(name='정치/사회')
