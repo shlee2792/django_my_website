@@ -54,3 +54,8 @@ class Post(models.Model):
 
     def get_update_url(self):
          return self.get_absolute_url()+'update/'
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = MarkdownxField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)

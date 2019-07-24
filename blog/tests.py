@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -33,6 +33,20 @@ def create_post(title, content, author, category = None):
         category = category,
     )
     return blog_post
+
+def create_comment(post, text='a comment', author = None):
+    if author is None:
+        author, is_created = User.objects.get_or_create(
+            username = 'guest',
+            password = 'guestpassword',
+        )
+    comment = Comment.objects.create(
+        post = post,
+        text = text,
+        author = author,
+    )
+
+    return comment
 
 class TestModel(TestCase):
     def setUp(self):
@@ -82,6 +96,27 @@ class TestModel(TestCase):
         self.assertEqual(tag_001.post_set.count(), 2)
         self.assertEqual(tag_001.post_set.first(), post_000)
         self.assertEqual(tag_001.post_set.last(), post_001)
+
+    def test_comment(self):
+        post_000 = create_post(
+            title='The first Post',
+            content='Hello world',
+            author=self.author_000,
+        )
+
+        self.assertEqual(Comment.objects.count(), 0)
+
+        comment_000 = create_comment(
+            post = post_000,
+        )
+        comment_001 = create_comment(
+            post=post_000,
+            text = 'second comment'
+        )
+
+        self.assertEqual(Comment.objects.count(), 2)
+        self.assertEqual(post_000.comment_set.count(), 2)
+
 
 class TextView(TestCase):
     def setUp(self):
@@ -336,8 +371,15 @@ class TextView(TestCase):
 
     def test_post_create(self):
         response = self.client.get('/blog/create/')
+        self.assertNotEqual(response.status_code, 200)
+
+        self.client.login(username = 'smith', password = 'nopassword')
+        response = self.client.get('/blog/create/')
         self.assertEqual(response.status_code, 200)
 
         soup = BeautifulSoup(response.content, 'html.parser')
         main_div = soup.find('div', id='main-div')
+
+
+
 
