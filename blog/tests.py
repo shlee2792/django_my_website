@@ -206,6 +206,8 @@ class TextView(TestCase):
             category=category_politics
         )
 
+        comment_000 = create_comment(post_000, text = "a test comment", author = self.author_obama)
+
         self.assertGreater(Post.objects.count(), 0)
         post_000_url = post_000.get_absolute_url()
         self.assertEqual(post_000_url, '/blog/{}/'.format(post_000.pk))
@@ -232,6 +234,8 @@ class TextView(TestCase):
 
         self.check_right_side(soup)
 
+
+
         self.assertIn(category_politics.name, main_div.text)    #category가 main_div에 있다.
         self.assertNotIn('EDIT', main_div.text)        #edit 버튼이 로그인 하지 않은 경우 보이지 않는다
 
@@ -246,6 +250,11 @@ class TextView(TestCase):
         main_div = soup.find('div', id = 'main-div')
         self.assertEqual(post_000.author, self.author_000)
         self.assertIn('EDIT', main_div.text)
+
+        # comment
+        comments_div = main_div.find('div', id='comment-list')
+        self.assertIn(comment_000.author.username, comments_div.text)
+        self.assertIn(comment_000.text, comments_div.text)
 
 
         # 그렇지 않으면 없다
