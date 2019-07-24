@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdown
+
+
 class Category(models.Model):
     name = models.CharField(max_length=25, unique=True)
     description = models.TextField(blank=True)
@@ -36,7 +38,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=True)
     head_image = models.ImageField(upload_to='blog/%y/%m/%d/', blank=True)
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL)
-    tags = models.ManyToManyField(Tag, null=True)
+    tags = models.ManyToManyField(Tag,blank=True)
 
 
     def __str__(self):
@@ -50,4 +52,5 @@ class Post(models.Model):
     def get_markdown_content(self):
         return markdown(self.content)
 
-
+    def get_update_url(self):
+         return self.get_absolute_url()+'update/'
