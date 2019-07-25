@@ -207,6 +207,7 @@ class TextView(TestCase):
         )
 
         comment_000 = create_comment(post_000, text = "a test comment", author = self.author_obama)
+        comment_001 = create_comment(post_000, text="a test comment", author=self.author_000)
 
         self.assertGreater(Post.objects.count(), 0)
         post_000_url = post_000.get_absolute_url()
@@ -268,6 +269,18 @@ class TextView(TestCase):
         main_div = soup.find('div', id='main-div')
         self.assertEqual(post_000.author, self.author_000)
         self.assertNotIn('EDIT', main_div.text)
+
+        comments_div = main_div.find('div', id='comment-list')
+        comment_000_div  = comments_div.find('div', id ='comment-id-{}'.format(comment_000.pk))
+
+        self.assertIn('edit', comment_000_div.text)
+        self.assertIn('delete', comment_000_div.text)
+
+        comment_001_div = comments_div.find('div', id='comment-id-{}'.format(comment_001.pk))
+
+        self.assertNotIn('edit', comment_001_div.text)
+        self.assertNotIn('delete', comment_001_div.text)
+
 
 
 
