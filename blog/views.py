@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Post,Category, Tag
+from .models import Post,Category, Tag, Comment
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CommentForm
@@ -105,11 +105,15 @@ def new_comment(request, pk):
             comment.author = request.user
             comment.save()
             return redirect(comment.get_absolute_url())
-
-
     else:
         return redirect('/blog')
 
+def delete_comment(Irequest, pk):
+    comment = Comment.objects.get(pk=pk)
+    post = comment.post
+    comment.delete()
+
+    return redirect(post.get_absolute_url() + '#commnet-list')
 
 
 
