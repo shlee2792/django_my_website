@@ -108,12 +108,14 @@ def new_comment(request, pk):
     else:
         return redirect('/blog')
 
-def delete_comment(Irequest, pk):
+def delete_comment(request, pk):
     comment = Comment.objects.get(pk=pk)
     post = comment.post
-    comment.delete()
-
-    return redirect(post.get_absolute_url() + '#commnet-list')
+    if request.user == comment.author:
+        comment.delete()
+        return redirect(post.get_absolute_url() + '#commnet-list')
+    else:
+        raise PermissionError('Comment를 삭제할 권한이 없습니다.')
 
 
 
