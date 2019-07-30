@@ -84,7 +84,7 @@
                 {% else %}
                 <li class="nav-item">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
-                       Please Login
+                       Login
                     </button>
                 </li>
 
@@ -109,11 +109,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <a role = "button" class = "btn btn-primary" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i> Login With Google</a>
+                <div class="row">
+                        <div class="col-md-6">
+                                <a role = "button" class = "btn btn-outline-primary" href="{% provider_login_url 'google' %}"><i class="fab fa-google"></i>  Log in With Google</a>
+                                <a role = "button" class = "btn btn-outline-info" href="/accounts/login"><i class="far fa-envelope"></i>  Log in With Email</a>
+                        </div>
+                        <div class ="col-md-6">
+                                <a role = "button" class = "btn btn-outline-info" href="/accounts/signup"><i class="far fa-envelope"></i>  Sign Up With Email</a>
+
+                        </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
