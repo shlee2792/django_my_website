@@ -498,6 +498,40 @@ class TextView(TestCase):
         self.assertNotIn('I am president of the USA', soup.body.text)
         self.assertIn('I was president of the USA', soup.body.text)
 
+    def test_pagination(self):
+        #post가 적은 경우
+        for i in range(0,3):
+            post = create_post(
+                title='The  Post No. {}'.format(i),
+                content='Content : {}'.format(i),
+                author=self.author_000,
+            )
+
+        response = self.client.get('/blog/')
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertNotIn('Older', soup.body.text)
+        self.assertNotIn('Newer', soup.body.text)
+
+        for i in range(3, 10):
+            post = create_post(
+                title='The  Post No. {}'.format(i),
+                content='Content : {}'.format(i),
+                author=self.author_000,
+            )
+
+        response = self.client.get('/blog/')
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn('Older', soup.body.text)
+        self.assertIn('Newer', soup.body.text)
+
+
+
+
+
 
 
 
