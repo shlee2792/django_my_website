@@ -4,6 +4,9 @@ from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CommentForm
 
+#or 조건 추가 가능
+from django.db.models import Q
+
 class PostList(ListView):
     model = Post
     paginate_by = 5
@@ -11,12 +14,22 @@ class PostList(ListView):
     # def get_queryset(self):
     #     return Post.objects.order_by('-created')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *, object_list: object = None, kwargs: object) -> object:
         context = super(PostList, self).get_context_data(**kwargs)
         context['category_list'] = Category.objects.all()
         context['posts_without_category'] = Post.objects.filter(category=None).count()
 
         return context
+
+class PostSearch(PostList):
+
+    def get_queryset(self):
+        q = self.kwargs['q']
+        object_list = Post.objects.filter(Q(title__contains = q) | Q(content__contains = q))
+        return object_list
+
+
+
 
 class PostDetail(DetailView):
     model = Post
