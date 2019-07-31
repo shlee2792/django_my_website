@@ -3,7 +3,6 @@ from .models import Post,Category, Tag, Comment
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CommentForm
-
 #or 조건 추가 가능
 from django.db.models import Q
 
@@ -14,11 +13,11 @@ class PostList(ListView):
     # def get_queryset(self):
     #     return Post.objects.order_by('-created')
 
-    def get_context_data(self, *, object_list: object = None, kwargs: object) -> object:
+    # def get_context_data(self, *, object_list: object = None, kwargs: object) -> object:
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostList, self).get_context_data(**kwargs)
         context['category_list'] = Category.objects.all()
         context['posts_without_category'] = Post.objects.filter(category=None).count()
-
         return context
 
 class PostSearch(PostList):
@@ -27,6 +26,14 @@ class PostSearch(PostList):
         q = self.kwargs['q']
         object_list = Post.objects.filter(Q(title__contains = q) | Q(content__contains = q))
         return object_list
+
+
+    def get_context_data(self, **kwargs):
+        context = super(PostSearch,self).get_context_data()
+        context['search_info'] = 'Search: "{}"'.format(self.kwargs['q'])
+        return context
+
+
 
 
 
@@ -130,9 +137,7 @@ class CommentUpdate(UpdateView):
         comment = super(CommentUpdate,self).get_object()
         if comment.author != self.request.user:
             raise PermissionError('Comment 수정 권한이 없습니다.')
-
         return comment
-
 
 
 
