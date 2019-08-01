@@ -133,6 +133,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+SITE_ID = 1
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'_media')
 MEDIA_URL = '/media/'
