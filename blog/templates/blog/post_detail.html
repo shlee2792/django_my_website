@@ -8,9 +8,9 @@
 <h1>{{ object.title }}</h1>
 
 {% if object.category %}
-    <span class="badge badge-primary float-right" >{{ object.category }}</span>
+<span class="badge badge-primary float-right" >{{ object.category }}</span>
 {% else %}
-    <span class="badge badge-primary float-right" >미분류</span>
+<span class="badge badge-primary float-right" >미분류</span>
 {% endif %}
 
 
@@ -21,7 +21,7 @@
 </p>
 
 {% if request.user == object.author %}
-    <button type="button" class="btn btn-sm btn-outline-secondary float-right" onclick="location.href='{{object.get_update_url}}'">EDIT</button>
+<button type="button" class="btn btn-sm btn-outline-secondary float-right" onclick="location.href='{{object.get_update_url}}'">EDIT</button>
 {% endif %}
 <hr/>
 
@@ -30,16 +30,16 @@
 
 <!-- Preview Image -->
 {% if post.head_image %}
-    <img class="card-img-top" src="{{ post.head_image.url }}" alt="Card image cap">
+<img class="card-img-top" src="{{ post.head_image.url }}" alt="Card image cap">
 {% else %}
-    <img class="card-img-top" src="https://picsum.photos/750/300/?random" alt="Card image cap">
+<img class="card-img-top" src="https://picsum.photos/750/300/?random" alt="Card image cap">
 {% endif %}
 
 <!-- Post Content -->
 {{ object.get_markdown_content | safe }}
 <hr>
 {% for tag in object.tags.all %}
-    <a href ="{{tag.get_absolute_url}}" >#{{ tag }}</a>
+<a href ="{{tag.get_absolute_url}}" >#{{ tag }}</a>
 {% endfor %}
 <br/>
 
@@ -54,6 +54,11 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+            Login
+        </button>
+
     </div>
 </div>
 
@@ -62,9 +67,9 @@
     {% for comment in object.comment_set.all %}
     <div class="media mb-4" id ="comment-id-{{ comment.pk }}">
         {% if comment.author.socialaccount_set.all.0.get_avatar_url %}
-            <img width = "50px" class="d-flex mr-3 rounded-circle" src="{{ comment.author.socialaccount_set.all.0.get_avatar_url }}" alt="">
+        <img width = "50px" class="d-flex mr-3 rounded-circle" src="{{ comment.author.socialaccount_set.all.0.get_avatar_url }}" alt="">
         {% else %}
-            <img class="d-flex mr-3 rounded-circle" src="https://api.adorable.io/avatars/50/{{ comment.author  }}.png" alt="">
+        <img class="d-flex mr-3 rounded-circle" src="https://api.adorable.io/avatars/50/{{ comment.author  }}.png" alt="">
         {% endif %}
         <div class="media-body">
             {% if comment.author == request.user %}
